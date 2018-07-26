@@ -28,4 +28,7 @@ public interface WeiboMapper {
 
     @Select("SELECT t.USERNAME FROM weibo t")
     List<Username> selectUserName();
+
+    @Select("SELECT t.USERID FROM weibo")
+    List<String> selectUserId();
 }

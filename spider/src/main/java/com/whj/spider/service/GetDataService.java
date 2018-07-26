@@ -1,19 +1,13 @@
 package com.whj.spider.service;
 
+import com.alibaba.fastjson.JSONPObject;
 import com.whj.spider.dao.WeiboInfo;
-import com.whj.spider.dto.BaseResDto;
 import com.whj.spider.dao.Username;
 import com.whj.spider.mapper.WeiboMapper;
 import com.whj.spider.util.ListUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import weibo4j.Users;
-import weibo4j.Weibo;
-import weibo4j.examples.oauth2.Log;
-import weibo4j.model.User;
-import weibo4j.model.WeiboException;
-import weibo4j.org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,20 +19,17 @@ import java.util.List;
  * @desc
  */
 @Service
-public class GetDataService extends Weibo{
+public class GetDataService {
 
     @Autowired
     private WeiboMapper weiboMapper;
 
-    @Value("${access_token}")
-    String access_token;
     /**
      * 根据用户名获取用户信息
      *
      * @return User
-     * @throws WeiboException
      */
-    public BaseResDto<JSONObject> queryUserByScreenName() throws WeiboException{
+    public User queryUserByScreenName(){
         List<Username> userList = weiboMapper.selectUserName();
         List<List<Username>> list = ListUtil.split(userList,20);
         for (List<Username> usernameList:list){
@@ -53,23 +44,18 @@ public class GetDataService extends Weibo{
         return baseResDto;
     }
 
-    /**
-     * 调用微博API
-     * @param screen_name
-     * @return
-     * @throws WeiboException
-     */
-    private User showUserByScreenName(String screen_name) throws WeiboException{
-        Users users = new Users(access_token);
-        try {
-            User user = users.showUserByScreenName(screen_name);
-            return user;
-        } catch (WeiboException var5) {
-            var5.printStackTrace();
-            return null;
+    public static void main(String[] args) {
+        String access_token = "2.001rdKnFU4jl7Efd58fc5dbf5SdkQC";
+        for (String screen_name:strings){
+            Users um = new Users(access_token);
+            try {
+                User user = um.showUserByScreenName(screen_name);
+                Log.logInfo(user.toString());
+            } catch (WeiboException e) {
+                e.printStackTrace();
+            }
         }
     }
-
     /**
      * user转WeiboInfo
      * @param user
